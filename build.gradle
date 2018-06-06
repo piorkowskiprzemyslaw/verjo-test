@@ -1,0 +1,89 @@
+buildscript {
+    ext {
+        repoConfig = {
+            mavenLocal()
+
+            mavenCentral()
+
+            maven {
+                url 'https://plugins.gradle.org/m2/'
+            }
+        }
+
+        jooqVersion = "3.10.4"
+        gradleJooqPluginVersion = "2.0.11"
+    }
+
+    repositories repoConfig
+
+    dependencies {
+        classpath("nu.studer:gradle-jooq-plugin:${gradleJooqPluginVersion}")
+        classpath("com.vertabelo.gradle:vertabelo:1.0.1")
+    }
+}
+
+apply plugin: "java"
+apply plugin: "nu.studer.jooq"
+apply plugin: "vertabelo"
+
+repositories repoConfig
+
+dependencies {
+    compile("org.jooq:jooq:${jooqVersion}")
+
+    jooqRuntime("com.github.piorkowskiprzemyslaw:verjo:+")
+}
+
+vertabelo {
+    destSQLFile = "schema/model.sql"
+    destXMLFile = "schema/model.xml"
+    apiToken = System.getProperty("verjo-test.apiToken", "TODO-TOKEN")
+    modelId = System.getProperty("verjo-test.modelId", "TODO-MODEL-ID")
+}
+
+task updateVertabelo(dependsOn: [vertabeloSQL, vertabeloXML])
+
+jooq {
+    version = jooqVersion
+    edition = 'OSS'
+    sample(sourceSets.main) {
+        generator {
+            database {
+                name = 'com.github.piorkowskiprzemyslaw.verjo.VertabeloDbDefinition'
+                properties {
+                    property {
+                        key = "vertabelo-xml-file"
+                        value = "schema/model.xml"
+                    }
+
+                    property {
+                        key = "vertabelo-default-schema"
+                        value = "default-schema-name"
+                    }
+                }
+            }
+
+            generate {
+                relations = true
+                deprecated = false
+                records = true
+                immutablePojos = true
+                fluentSetters = true
+            }
+
+            target {
+                packageName = "com.github.piorkowskiprzemyslaw.verjo.test"
+                directory = "gen/main/java/vertabelo-test"
+            }
+        }
+    }
+}
+
+clean {
+    delete "gen"
+}
+
+task wrapper(type: Wrapper) {
+    gradleVersion = "4.8"
+    distributionType = Wrapper.DistributionType.ALL
+}
