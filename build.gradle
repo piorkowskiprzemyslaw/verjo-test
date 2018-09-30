@@ -35,7 +35,7 @@ repositories repoConfig
 dependencies {
     compile("org.jooq:jooq:${jooqVersion}")
 
-    jooqRuntime("com.github.piorkowskiprzemyslaw:verjo:0.1.5-SNAPSHOT")
+    jooqRuntime("com.github.piorkowskiprzemyslaw:verjo:+")
     jooqRuntime("javax.xml.bind:jaxb-api:2.3.0")
     jooqRuntime("com.sun.xml.bind:jaxb-core:2.3.0")
     jooqRuntime("com.sun.xml.bind:jaxb-impl:2.3.0")
