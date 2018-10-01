@@ -10,7 +10,7 @@ buildscript {
             }
         }
 
-        jooqVersion = "3.11.2"
+        jooqVersion = "3.11.5"
         gradleJooqPluginVersion = "3.0.2"
     }
 
