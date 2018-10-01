@@ -34,6 +34,7 @@ repositories repoConfig
 
 dependencies {
     compile("org.jooq:jooq:${jooqVersion}")
+    compile("javax.annotation:javax.annotation-api:1.3.2")
 
     jooqRuntime("com.github.piorkowskiprzemyslaw:verjo:+")
     jooqRuntime("javax.xml.bind:jaxb-api:2.3.0")
